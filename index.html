@@ -1,9 +1,14 @@
 <!doctype html>
-<html lang="ru">
+<html lang="de">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Тренажёр немецких глаголов с предлогами A1–C2">
+<meta name="description" content="Verben mit Präpositionen A1–C2 trainieren: die Präposition direkt in den Satz eintippen. Mit da-/wo-Wörtern, -einander und Wiederholung in Intervallen.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Präpositionen-Trainer">
+<meta property="og:description" content="Verben mit Präpositionen A1–C2 trainieren: die Präposition direkt in den Satz eintippen. Mit da-/wo-Wörtern, -einander und Wiederholung in Intervallen.">
+<meta property="og:url" content="https://cherkasovandrii.github.io/verben-mit-praepositionen-trainer/">
+<meta property="og:locale" content="de_DE">
 <title>Präpositionen-Trainer</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -177,6 +182,9 @@ input.blank:focus { outline: none; border-color: var(--focus); box-shadow: 0 0 0
 input.blank.ok { color: var(--ok); background: var(--ok-soft); border-color: var(--ok); }
 input.blank.bad { color: var(--bad); background: var(--bad-soft); border-color: var(--bad); text-decoration: line-through; }
 input.blank.shown { color: var(--muted); border-style: dashed; }
+.peek { display: inline-block; font-weight: 700; color: var(--muted); border: 1.5px dashed var(--line-2); border-radius: 8px; padding: 0 .3em; margin-inline-start: .15em; }
+button.mk { border: 0; padding: 0; cursor: pointer; font: inherit; }
+.srow.bad button.mk:hover::before, .srow.bad button.mk:focus-visible::before { content: "↺"; font-size: 1rem; }
 .fix { display: inline-block; font-weight: 750; color: var(--ok); background: var(--ok-soft); border-radius: 8px; padding: 0 .3em; margin-inline-start: .15em; }
 .qcase { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .qcase > span { color: var(--muted); font-size: .9rem; }
@@ -295,10 +303,10 @@ html[dir="rtl"] .auto i { transform-origin: right; }
     <div class="bar-end">
       <span class="sync" id="sync" data-s="local" aria-live="polite"><i></i><span></span></span>
       <select class="langsel" id="lang" aria-label="Language">
+        <option value="de">Deutsch</option>
         <option value="ru">Русский</option>
         <option value="uk">Українська</option>
         <option value="en">English</option>
-        <option value="de">Deutsch</option>
         <option value="ar">العربية</option>
       </select>
     </div>
@@ -341,6 +349,7 @@ const COLLO = { darauf: "drauf", daran: "dran", "darüber": "drüber", darum: "d
 const I18N = {
   ru: {
     navCards: "Карточки", navSheet: "Лист", navVerbs: "Глаголы",
+    hideAnswers: "Скрыть ответы", retry: "Ещё раз", noCards: "Для выбранных уровней в этой теме карточек нет.",
     topic: "Тема", topicP: "Предлоги", topicDa: "da-/wo-слова", topicEi: "-einander",
     topicDaNote: "Карточек: {n} · dafür, darauf, worüber… вместо «предлог + это»", topicEiNote: "Карточек: {n} · miteinander, voneinander… — «друг с другом, друг от друга»",
     nAlt: "Тоже верно. В этой карточке тренируем вариант: {x}.", nDaR: "Перед гласной нужна -r-: {x}.", nDaNeeded: "Здесь нужно местоименное наречие: {x}.",
@@ -379,6 +388,7 @@ const I18N = {
   },
   uk: {
     navCards: "Картки", navSheet: "Аркуш", navVerbs: "Дієслова",
+    hideAnswers: "Сховати відповіді", retry: "Ще раз", noCards: "Для вибраних рівнів у цій темі карток немає.",
     topic: "Тема", topicP: "Прийменники", topicDa: "da-/wo-слова", topicEi: "-einander",
     topicDaNote: "Карток: {n} · dafür, darauf, worüber… замість «прийменник + це»", topicEiNote: "Карток: {n} · miteinander, voneinander… — «одне з одним, одне від одного»",
     nAlt: "Теж правильно. У цій картці тренуємо варіант: {x}.", nDaR: "Перед голосною потрібна -r-: {x}.", nDaNeeded: "Тут потрібен займенниковий прислівник: {x}.",
@@ -417,6 +427,7 @@ const I18N = {
   },
   en: {
     navCards: "Cards", navSheet: "Sheet", navVerbs: "Verbs",
+    hideAnswers: "Hide answers", retry: "Try again", noCards: "No cards in this topic for the selected levels.",
     topic: "Topic", topicP: "Prepositions", topicDa: "da-/wo-words", topicEi: "-einander",
     topicDaNote: "{n} cards · dafür, darauf, worüber… instead of “preposition + it”", topicEiNote: "{n} cards · miteinander, voneinander… “with each other, from each other”",
     nAlt: "Also correct. This card practises: {x}.", nDaR: "Add -r- before a vowel: {x}.", nDaNeeded: "This needs a da-/wo-word: {x}.",
@@ -455,6 +466,7 @@ const I18N = {
   },
   de: {
     navCards: "Karten", navSheet: "Blatt", navVerbs: "Verben",
+    hideAnswers: "Lösungen ausblenden", retry: "Nochmal", noCards: "Für die gewählten Niveaus gibt es in diesem Thema keine Karten.",
     topic: "Thema", topicP: "Präpositionen", topicDa: "da-/wo-Wörter", topicEi: "-einander",
     topicDaNote: "{n} Karten · dafür, darauf, worüber … statt „Präposition + es“", topicEiNote: "{n} Karten · miteinander, voneinander … „gegenseitig“",
     nAlt: "Auch richtig. Diese Karte übt: {x}.", nDaR: "Vor einem Vokal kommt ein -r- dazu: {x}.", nDaNeeded: "Hier braucht man ein Pronominaladverb: {x}.",
@@ -493,6 +505,7 @@ const I18N = {
   },
   ar: {
     navCards: "بطاقات", navSheet: "ورقة", navVerbs: "الأفعال",
+    hideAnswers: "إخفاء الإجابات", retry: "مرة أخرى", noCards: "لا توجد بطاقات في هذا الموضوع للمستويات المختارة.",
     topic: "الموضوع", topicP: "حروف الجر", topicDa: "كلمات da-/wo-", topicEi: "-einander",
     topicDaNote: "عدد البطاقات: {n} · dafür وdarauf وworüber… بدل «حرف جر + ذلك»", topicEiNote: "عدد البطاقات: {n} · miteinander وvoneinander… بمعنى «بعضهم مع بعض»",
     nAlt: "صحيح أيضًا. هذه البطاقة تتدرّب على: {x}.", nDaR: "قبل الحرف المتحرك يُضاف -r-: {x}.", nDaNeeded: "هنا يلزم ظرف ضميري: {x}.",
@@ -532,12 +545,12 @@ const I18N = {
 };
 
 /* ---------- state ---------- */
-let S = { lang: "ru", levels: ["A1", "A2"], topic: "p", mode: "s", len: 15, askCase: true, showTrans: true, autoNext: true, hints: true };
+let S = { lang: "de", levels: ["A1", "A2"], topic: "p", mode: "s", len: 15, askCase: true, showTrans: true, autoNext: true, hints: true };
 let P = {};            // progress: key -> [box, due, reviews, wrong, lastTs]
 let view = "cards";    // cards | sheet | verbs
 let sub = "home";      // inside cards: home | card | done
 let R = null;          // current round
-let SH = { order: [], ans: {}, res: {}, reviewed: new Set(), sig: "" };
+let SH = { order: [], orders: {}, ans: {}, res: {}, reviewed: new Set(), sig: "", peek: false };
 let resetAsk = false;
 let listQuery = "";
 let autoTimer = null;
@@ -547,7 +560,7 @@ const syncEl = document.getElementById("sync");
 let syncState = "local";
 
 const t = (k, v) => {
-  let s = (I18N[S.lang] && I18N[S.lang][k]) || I18N.ru[k] || k;
+  let s = (I18N[S.lang] && I18N[S.lang][k]) || I18N.de[k] || I18N.ru[k] || k;
   if (v) for (const [a, b] of Object.entries(v)) s = s.split("{" + a + "}").join(S.lang === "ar" ? bidi(b) : b);
   return s;
 };
@@ -558,7 +571,7 @@ const curMode = () => (S.topic === "da" ? "pa" : S.topic === "ei" ? "ei" : S.mod
 // keep Latin bits (Akk., zum) readable inside Arabic text
 const bidi = x => (/[A-Za-zÄÖÜäöüß]/.test(String(x)) ? "\u2066" + x + "\u2069" : String(x));
 const caseName = c => { const n = c === "A" ? t("caseA") : t("caseD"); return S.lang === "ar" ? bidi(n) : n; };
-const trOf = c => c[S.lang] || c.ru;
+const trOf = c => c[S.lang] || c.de || c.ru;
 const kbd = k => '<span class="kbd">' + esc(k) + "</span>";
 const reduced = () => window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -575,7 +588,7 @@ function loadLocal() {
   if (![10, 15, 20, 30].includes(S.len)) S.len = 15;
   if (!["s", "d"].includes(S.mode)) S.mode = "s";
   if (!["p", "da", "ei"].includes(S.topic)) S.topic = "p";
-  if (!LANGS.includes(S.lang)) S.lang = "ru";
+  if (!LANGS.includes(S.lang)) S.lang = "de";
 }
 function saveSettings() { try { localStorage.setItem(LS_SETTINGS, JSON.stringify(S)); } catch (e) {} }
 function saveLocalProgress() { try { localStorage.setItem(LS_PROGRESS, JSON.stringify(P)); } catch (e) {} }
@@ -709,18 +722,18 @@ function gradeBlank(answer, expected, prep, alt) {
   if (!a) return { ok: false, empty: true };
   if (a === x || COLLO[x] === a || COLLO[a] === x) return { ok: true };
   if (x.endsWith("einander")) {
-    if (a.replace(/[\s-]+/g, "") === x) return { ok: true, note: t("nEinSpace", { x: expected }) };
-    if (fold(a) === fold(x)) return { ok: true, note: t("nUmlaut", { x: expected }) };
-    if (a === fold(prep) || a === prep || a.startsWith(prep + " ") || a === "einander") return { ok: false, note: t("nEinNeeded", { x: expected }) };
+    if (a.replace(/[\s-]+/g, "") === x) return { ok: true, note: ["nEinSpace", { x: expected }] };
+    if (fold(a) === fold(x)) return { ok: true, note: ["nUmlaut", { x: expected }] };
+    if (a === fold(prep) || a === prep || a.startsWith(prep + " ") || a === "einander") return { ok: false, note: ["nEinNeeded", { x: expected }] };
     return { ok: false };
   }
-  if (alt && alt.map(norm).includes(a)) return { ok: true, note: t("nAlt", { x: expected }) };
-  if (/^(da|wo)r/.test(x) && fold(a) === fold(x.slice(0, 2) + x.slice(3))) return { ok: false, note: t("nDaR", { x: expected }) };
-  if (/^(da|wo)/.test(x) && (a === prep || a.startsWith(prep + " "))) return { ok: false, note: t("nDaNeeded", { x: expected }) };
-  if (CONTR[x] && CONTR[x] === a) return { ok: true, note: t("nContrUsual", { x: expected }) };
-  if (fold(a) === fold(x)) return { ok: true, note: t("nUmlaut", { x: expected }) };
-  if (CONTR[x] && CONTR[x].split(" ")[0] === a) return { ok: false, note: t("nContrNeeded", { x: expected, y: CONTR[x] }) };
-  if ((FORMS[prep] || []).map(fold).includes(fold(a))) return { ok: false, note: t("nOtherForm", { x: expected }) };
+  if (alt && alt.map(norm).includes(a)) return { ok: true, note: ["nAlt", { x: expected }] };
+  if (/^(da|wo)r/.test(x) && fold(a) === fold(x.slice(0, 2) + x.slice(3))) return { ok: false, note: ["nDaR", { x: expected }] };
+  if (/^(da|wo)/.test(x) && (a === prep || a.startsWith(prep + " "))) return { ok: false, note: ["nDaNeeded", { x: expected }] };
+  if (CONTR[x] && CONTR[x] === a) return { ok: true, note: ["nContrUsual", { x: expected }] };
+  if (fold(a) === fold(x)) return { ok: true, note: ["nUmlaut", { x: expected }] };
+  if (CONTR[x] && CONTR[x].split(" ")[0] === a) return { ok: false, note: ["nContrNeeded", { x: expected, y: CONTR[x] }] };
+  if ((FORMS[prep] || []).map(fold).includes(fold(a))) return { ok: false, note: ["nOtherForm", { x: expected }] };
   return { ok: false };
 }
 function expectedOf(c, mode) {
@@ -731,6 +744,7 @@ function expectedOf(c, mode) {
 
 /* ---------- rendering helpers ---------- */
 const caseShown = mode => mode === "s" || mode === "d";
+const noteText = n => (n[0] === "nCase" ? t("nCase", { x: caseName(n[1].c) }) : t(n[0], n[1]));
 const HOW = { da: ["– Freust du dich auf den Urlaub? – Ja, ich freue mich {gap}.", "darauf (auf + es)"], ei: ["Wir sind ein Team und können uns {gap} verlassen.", "aufeinander"] };
 function verbLabel(c, mode, shown) {
   const ans = (expectedOf(c, mode)[0] || "");
@@ -768,6 +782,7 @@ function segHTML(segsList, opts) {
           ' value="' + esc(v) + '" style="width:' + Math.max(3, v.length + 1) + 'ch"' + (st != null ? " readonly tabindex=\"-1\"" : "") +
           ' autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="next" aria-label="' + esc(t("gap", { n: n + 1 })) + '">';
         if (st === false && opts.fix) html += '<span class="fix">' + esc(txt) + "</span>";
+        else if (st == null && opts.peek) html += '<span class="peek">' + esc(txt) + "</span>";
         n++;
       } else html += '<span class="ans">' + esc(txt) + "</span>";
     }
@@ -828,6 +843,7 @@ function renderHome() {
   const list = pool(), st = boxStats(list, curMode()), now = Date.now();
   const due = list.filter(c => { const e = P[keyOf(c, curMode())]; return e && e[1] <= now; }).length;
   const canStart = S.levels.length > 0 && (due + st.fresh) > 0;
+  const noCards = S.levels.length > 0 && list.length === 0;
   const total = Math.max(1, list.length);
   const colors = ["var(--line-2)", "#f5b400", "#f08c00", "#5aa9e6", "#2b8a5e", "var(--ok)"];
   const counts = [st.fresh, ...st.f];
@@ -853,9 +869,9 @@ function renderHome() {
     '<div class="startbox">' +
     (canStart
       ? '<button type="button" class="btn primary big" id="start">' + esc(t("start")) + " " + kbd("Enter") + '</button><span class="meta">' + esc(t("startMeta", { due, fresh: st.fresh })) + "</span>"
-      : (S.levels.length
+      : (S.levels.length && !noCards
           ? '<span class="meta">' + esc(t("nothing")) + '</span><button type="button" class="btn big" id="practise">' + esc(t("practise")) + "</button>"
-          : '<button type="button" class="btn primary big" disabled>' + esc(t("start")) + '</button><span class="meta">' + esc(t("noLevels")) + "</span>")) +
+          : '<button type="button" class="btn primary big" disabled>' + esc(t("start")) + '</button><span class="meta">' + esc(noCards ? t("noCards") : t("noLevels")) + "</span>")) +
     "</div></section>" +
     '<div class="side">' +
     '<section class="panel"><p class="label">' + esc(t("srsTitle")) + '</p><div class="srsbar">' + bar + '</div><div class="legend">' + legend + "</div>" +
@@ -897,6 +913,7 @@ function nextCard() {
   sub = "card"; render();
 }
 function renderCard() {
+  clearAuto();
   const c = R.cur, dlg = R.mode === "d", asking = R.phase === "ask";
   const askCase = S.askCase && R.mode === "s";
   const segsList = dlg ? c.st : [c.ex];
@@ -925,7 +942,7 @@ function renderCard() {
       '<div class="acts"><button type="button" class="btn" id="dunno">' + esc(t("dontKnow")) + '</button><button type="button" class="btn primary" id="check">' + esc(t("check")) + "</button></div></div>";
   } else {
     html += '<div class="qres ' + (r.ok ? "ok" : "bad") + '" aria-live="polite">' +
-      '<div class="verdict"><strong>' + esc(r.revealed ? t("revealed") : (r.ok ? t("ok") : t("bad"))) + "</strong>" + r.notes.map(n => "<span>" + esc(n) + "</span>").join(" ") + "</div>" +
+      '<div class="verdict"><strong>' + esc(r.revealed ? t("revealed") : (r.ok ? t("ok") : t("bad"))) + "</strong>" + r.notes.map(n => "<span>" + esc(noteText(n)) + "</span>").join(" ") + "</div>" +
       (!dlg && c.st ? '<div class="dialog de" dir="ltr" lang="de"><p class="label" dir="auto">' + esc(t("dialog")) + "</p>" + segHTML(c.st, {}) + "</div>" : "") +
       '<div class="acts">' + (!r.ok && !r.revealed ? '<button type="button" class="btn ghost" id="accept">' + esc(t("accept")) + "</button>" : "") +
       '<button type="button" class="btn primary" id="next">' + esc(t("next")) + " " + kbd("Enter") + "</button></div>" +
@@ -1008,11 +1025,11 @@ function submit(reveal) {
   const each = expected.map((x, i) => {
     if (reveal) return false;
     const g = gradeBlank(answers[i], x, c.p, c.alt);
-    if (g.note && !notes.includes(g.note)) notes.push(g.note);
+    if (g.note && !notes.some(n => n[0] === g.note[0])) notes.push(g.note);
     return g.ok;
   });
   let ok = !reveal && each.every(Boolean);
-  if (ok && askCase && R.caseSel !== c.c) { ok = false; notes.push(t("nCase", { x: caseName(c.c) })); }
+  if (ok && askCase && R.caseSel !== c.c) { ok = false; notes.push(["nCase", { c: c.c }]); }
   R.answers = reveal ? expected.map(() => "") : answers;
   R.result = { ok, each: ok ? each.map(() => true) : each, notes, revealed: reveal };
   if (!ok && askCase && each.every(Boolean)) R.result.each = each; // prepositions right, case wrong: keep inputs green
@@ -1061,11 +1078,13 @@ function renderDone() {
 function sheetSig() { return curMode() + "|" + S.levels.join(","); }
 function ensureSheet(reshuffle) {
   const sig = sheetSig();
-  if (sig !== SH.sig || reshuffle) {
+  if (sig !== SH.sig) SH.peek = false;
+  if (reshuffle || !SH.orders[sig]) {
     const ids = pool().map(c => c.id);
-    SH.order = reshuffle ? shuffle(ids) : ids;
-    SH.sig = sig;
+    SH.orders[sig] = reshuffle ? shuffle(ids) : ids;
   }
+  SH.order = SH.orders[sig];
+  SH.sig = sig;
 }
 function sheetKey(id) { return curMode() + "|" + id; }
 function rowHTML(id, i) {
@@ -1080,8 +1099,8 @@ function rowHTML(id, i) {
       (showVerb && caseShown(curMode()) ? '<span class="case ' + c.c + '">' + esc(caseName(c.c)) + "</span>" : "") + '<span dir="auto">' + esc(trOf(c)) + "</span></div>"
     : "";
   return '<li class="srow' + cls + '" id="row-' + i + '" data-id="' + esc(id) + '"><span class="num">' + (i + 1) + "</span>" +
-    '<div><div class="stxt de" dir="ltr" lang="de">' + segHTML(segsList, { inputs: true, row: id, vals, marks, fix: true }) + "</div>" + hint + "</div>" +
-    '<span class="mk" aria-hidden="true"></span></li>';
+    '<div><div class="stxt de" dir="ltr" lang="de">' + segHTML(segsList, { inputs: true, row: id, vals, marks, fix: true, peek: SH.peek }) + "</div>" + hint + "</div>" +
+    (res && !res.ok ? '<button type="button" class="mk" data-retry title="' + esc(t("retry")) + '" aria-label="' + esc(t("retry")) + '"></button>' : '<span class="mk" aria-hidden="true"></span>') + "</li>";
 }
 function sheetCounts() {
   let ok = 0, bad = 0;
@@ -1103,10 +1122,10 @@ function renderSheet() {
     topicSeg() + (S.topic === "p" ? modeSeg() : "") +
     '<label class="toggle"><input type="checkbox" id="opt-hints"' + (S.hints ? " checked" : "") + "><span>" + esc(t("hints")) + "</span></label></div>" +
     '<div class="tools-row"><div class="stats" id="stats"></div><span class="spacer"></span>' +
-    '<button type="button" class="btn primary" id="check-all">' + esc(t("checkAll")) + '</button><button type="button" class="btn" id="show-all">' + esc(t("showAnswers")) +
+    '<button type="button" class="btn primary" id="check-all">' + esc(t("checkAll")) + '</button><button type="button" class="btn" id="show-all" aria-pressed="' + SH.peek + '">' + esc(SH.peek ? t("hideAnswers") : t("showAnswers")) +
     '</button><button type="button" class="btn ghost" id="shuffle">' + esc(t("shuffle")) + '</button><button type="button" class="btn ghost" id="clear">' + esc(t("clear")) + "</button></div>" +
     "</div>" +
-    (SH.order.length ? '<ol class="rows" id="rows">' + rows + "</ol>" : '<p class="sempty">' + esc(t("sheetEmpty")) + "</p>");
+    (SH.order.length ? '<ol class="rows" id="rows">' + rows + "</ol>" : '<p class="sempty">' + esc(S.levels.length ? t("noCards") : t("sheetEmpty")) + "</p>");
   updateStats();
   bindLevelButtons(renderSheet);
   app.querySelectorAll("[data-mode]").forEach(b => b.addEventListener("click", () => { S.mode = b.dataset.mode; saveSettings(); renderSheet(); }));
@@ -1116,17 +1135,25 @@ function renderSheet() {
     for (const id of SH.order) { const k = sheetKey(id); if (!SH.res[k] && (SH.ans[k] || []).length && expectedOf(BYID.get(id), curMode()).every((_, n) => norm((SH.ans[k] || [])[n]))) gradeRow(id, false); }
     renderSheet();
   });
+  // "Show answers" only peeks: nothing is graded or stored, and the same button hides them again
   document.getElementById("show-all").addEventListener("click", () => {
-    for (const id of SH.order) { const k = sheetKey(id); if (!SH.res[k]) SH.res[k] = { ok: false, each: expectedOf(BYID.get(id), curMode()).map(() => false), revealed: true }; }
-    renderSheet();
+    const y = window.scrollY;
+    SH.peek = !SH.peek; renderSheet(); window.scrollTo(0, y);
+    const b = document.getElementById("show-all"); if (b) b.focus({ preventScroll: true });
   });
-  document.getElementById("shuffle").addEventListener("click", () => { ensureSheet(true); renderSheet(); });
+  document.getElementById("shuffle").addEventListener("click", () => { SH.peek = false; ensureSheet(true); renderSheet(); window.scrollTo(0, 0); focusNextRow(-1); });
   document.getElementById("clear").addEventListener("click", () => {
     for (const id of SH.order) { delete SH.ans[sheetKey(id)]; delete SH.res[sheetKey(id)]; }
-    renderSheet(); window.scrollTo(0, 0);
+    SH.peek = false; renderSheet(); window.scrollTo(0, 0); focusNextRow(-1);
   });
   const list = document.getElementById("rows");
   if (!list) return;
+  list.addEventListener("click", ev => {
+    const btn = ev.target.closest("[data-retry]"); if (!btn) return;
+    const li = btn.closest(".srow"), k = sheetKey(li.dataset.id);
+    delete SH.res[k]; delete SH.ans[k];
+    const i = +li.id.slice(4); refreshRow(li); focusNextRow(i - 1);
+  });
   list.addEventListener("input", ev => {
     const el = ev.target; if (!el.matches("input.blank")) return;
     sizeInput(el);
@@ -1166,7 +1193,9 @@ function refreshRow(li) {
   updateStats();
 }
 function focusNextRow(from) {
-  for (let i = from + 1; i < SH.order.length; i++) {
+  const n = SH.order.length;
+  for (let step = 1; step <= n; step++) {
+    const i = (from + step + n) % n;
     const li = document.getElementById("row-" + i);
     if (!li || li.classList.contains("ok") || li.classList.contains("bad")) continue;
     const f = [...li.querySelectorAll("input.blank")].find(x => !norm(x.value)) || li.querySelector("input.blank");
