@@ -23,7 +23,7 @@ A browser trainer for German **verbs with prepositions** (A1–C2). You don't pi
   - Where two prepositions are both correct, the second one is accepted too.
   - Targeted hints for typical mistakes: missing contraction, wrong case, *auf das* instead of *darauf*, missing *-r-* in *dar-*.
 - **Keyboard-first**: you never need the mouse (see below).
-- **Five interface languages**: Russian, Ukrainian, English, German (German meaning instead of a translation) and Arabic (right-to-left layout).
+- **Five interface languages**: German by default (with a German meaning instead of a translation), plus Russian, Ukrainian, English and Arabic (right-to-left layout).
 - Light and dark theme, works on phones.
 
 ## Keyboard shortcuts
