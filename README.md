@@ -11,9 +11,10 @@ A browser trainer for German **verbs with prepositions** (A1–C2). You don't pi
   - **Prepositions**: sentence mode, plus a small-talk mode with 65 short dialogues where you fill every gap.
   - **da-/wo-words** (176 cards): *dafür, dagegen, davon, darauf, worüber, wovon* …
   - **-einander** (48 cards): *miteinander, voneinander, aufeinander, ineinander* …
-- **Three views:**
+- **Four views:**
   - **Cards**: one sentence at a time.
   - **Sheet**: every sentence of the chosen levels on one page.
+  - **Quiz**: Quizlet-style multiple choice, a sentence with a gap and four options (keys `1`–`4`). Each level is split into numbered quizzes from the most common verbs to the rare ones. You choose 5, 10, 15 or 20 questions per quiz, and your best score per quiz is kept. There is also a random quiz per level.
   - **Verbs**: a searchable list with your learning status.
 - **Frequency bands for B1–C2**: every combination is marked *common*, *medium* or *rare* in everyday speech. The band is based on the verb's frequency in German film and TV subtitles (OpenSubtitles), adjusted for how often the verb is used with that particular preposition. You can train only the common ones first, sort the sheet and the verb list by frequency, and new cards are introduced most frequent first.
 - **Spaced repetition** (Leitner boxes): known cards come back after 1, 3, 7, 14 and 30 days; mistakes come back in the same round.
@@ -46,6 +47,7 @@ Everything stays in your browser, in `localStorage`, so nothing is sent anywhere
 |---|---|
 | `praep-trainer-progress-v1` | learning progress for every card |
 | `praep-trainer-settings-v1` | language, levels, topic, round length, toggles |
+| `praep-trainer-quiz-v1` | best score for every quiz |
 
 For each card the trainer stores `[box, next review, reviews, mistakes, last answer]` under the key `mode|card-id`, for example `s|A2:warten auf`. The modes are `s` (sentence), `d` (small talk), `pa` (da-/wo-words) and `ei` (-einander), so each topic has its own progress.
 
