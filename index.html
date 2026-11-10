@@ -253,6 +253,29 @@ html[dir="rtl"] .auto i { transform-origin: right; }
 .srow.bad .mk::before { content: "×"; font-size: 1.1rem; }
 .sempty { color: var(--muted); padding: 24px 0; }
 
+/* quiz */
+.qsetup { display: grid; gap: 18px; margin-bottom: 18px; }
+.qgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
+.qtile { border: 1.5px solid var(--line); background: var(--surface); border-radius: 14px; padding: 14px; text-align: start; display: grid; gap: 7px; align-content: start; }
+.qtile:hover { border-color: var(--text); }
+.qtile b { font-size: 1.02rem; font-weight: 750; }
+.qtile .sub { display: flex; align-items: center; gap: 7px; font-size: .8rem; color: var(--muted); }
+.qtile .best { justify-self: start; font-size: .76rem; font-weight: 700; border-radius: 6px; padding: 2px 7px; background: var(--surface-2); color: var(--muted); }
+.qtile .best.full { background: var(--ok-soft); color: var(--ok); }
+.qtile .best.part { background: var(--mark); color: var(--mark-ink); }
+.qtile.rnd { border-style: dashed; }
+.qtrans-inline { color: var(--muted); font-size: .92rem; }
+.qopts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.qopt { display: flex; align-items: center; gap: 12px; border: 1.5px solid var(--line); background: var(--surface); border-radius: 14px; padding: 14px 16px; font-size: 1.15rem; font-weight: 650; text-align: start; min-height: 56px; }
+.qopt:hover:not(:disabled) { border-color: var(--text); }
+.qopt:disabled { cursor: default; }
+.qopt:disabled:not(.ok):not(.bad) { opacity: .5; }
+.qopt.ok { border-color: var(--ok); background: var(--ok-soft); color: var(--ok); }
+.qopt.bad { border-color: var(--bad); background: var(--bad-soft); color: var(--bad); }
+.qgap { display: inline-block; min-width: 4.5ch; border-bottom: 3px solid var(--text); text-align: center; line-height: 1.2; }
+.qgap.done { color: var(--ok); border-color: var(--ok); font-weight: 750; padding: 0 .15em; }
+.mlist .qgap.done { min-width: 0; }
+
 /* verbs */
 .vtools { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 8px; }
 .vtools input[type="search"] { flex: 1 1 100%; min-width: 0; border: 1px solid var(--line); background: var(--surface); border-radius: 11px; padding: 10px 14px; }
@@ -276,6 +299,7 @@ html[dir="rtl"] .vlist h4 { letter-spacing: 0; }
 .vrow .t { color: var(--muted); font-size: .9rem; overflow-wrap: anywhere; }
 
 @media (max-width: 760px) {
+  .qkeys { display: none; }
   .sheet-tools { position: static; }
   .home { grid-template-columns: minmax(0, 1fr); }
   .levels { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -307,7 +331,7 @@ html[dir="rtl"] .vlist h4 { letter-spacing: 0; }
   <div class="bar-in">
     <a class="brand" href="#cards"><span class="logo" aria-hidden="true" dir="ltr">P+</span><span>Präpositionen-Trainer</span></a>
     <nav class="tabs" id="tabs" aria-label="Sections">
-      <a href="#cards" data-v="cards"></a><a href="#sheet" data-v="sheet"></a><a href="#verbs" data-v="verbs"></a>
+      <a href="#cards" data-v="cards"></a><a href="#sheet" data-v="sheet"></a><a href="#quiz" data-v="quiz"></a><a href="#verbs" data-v="verbs"></a>
     </nav>
     <div class="bar-end">
       <span class="sync" id="sync" data-s="local" aria-live="polite"><i></i><span></span></span>
@@ -358,6 +382,11 @@ const COLLO = { darauf: "drauf", daran: "dran", "darüber": "drüber", darum: "d
 const I18N = {
   ru: {
     navCards: "Карточки", navSheet: "Лист", navVerbs: "Глаголы",
+    navQuiz: "Квиз", quizTitle: "Квизы по уровням", quizLead: "Предложение с пропуском и четыре варианта — выбери правильный предлог. Квизы идут от самых частых глаголов уровня к редким.",
+    qLevel: "Уровень", qSize: "Вопросов в квизе", quizN: "Квиз {n}", qCount: "Вопросов: {n}", randomQuiz: "Случайный квиз", qRandomSub: "Вопросы вразброс со всего уровня",
+    qBest: "лучший: {x}", qNotTaken: "не пройден", qOf: "Вопрос {i} из {n}", qRight: "Верно!", qWrong: "Неверно. Правильно: {x}", qNext: "Дальше",
+    qPercent: "{p}% правильных ответов", qMist: "Ошибки", qYour: "твой ответ: {x}", qAgain: "Пройти ещё раз", qNextQuiz: "Следующий квиз", qAll: "Все квизы",
+    qNone: "В этой теме для уровня {l} нет карточек.", qNewBest: "новый рекорд!", qPerfect: "Без единой ошибки!", qKPick: "выбрать ответ",
     freq: "Частота (B1–C2)", fHi: "часто", fMid: "средне", fLo: "редко", sortFreq: "По частоте", sortAlpha: "А–Я",
     freqNote: "Насколько часто сочетание звучит в живой речи: частота глагола в субтитрах OpenSubtitles с поправкой на то, как часто он встречается именно с этим предлогом. A1–A2 всегда целиком.",
     hideAnswers: "Скрыть ответы", retry: "Ещё раз", noCards: "Для выбранных уровней в этой теме карточек нет.",
@@ -399,6 +428,11 @@ const I18N = {
   },
   uk: {
     navCards: "Картки", navSheet: "Аркуш", navVerbs: "Дієслова",
+    navQuiz: "Квіз", quizTitle: "Квізи за рівнями", quizLead: "Речення з пропуском і чотири варіанти — обери правильний прийменник. Квізи йдуть від найчастіших дієслів рівня до рідкісних.",
+    qLevel: "Рівень", qSize: "Питань у квізі", quizN: "Квіз {n}", qCount: "Питань: {n}", randomQuiz: "Випадковий квіз", qRandomSub: "Питання впереміш з усього рівня",
+    qBest: "найкращий: {x}", qNotTaken: "не пройдено", qOf: "Питання {i} з {n}", qRight: "Правильно!", qWrong: "Неправильно. Правильно: {x}", qNext: "Далі",
+    qPercent: "{p}% правильних відповідей", qMist: "Помилки", qYour: "твоя відповідь: {x}", qAgain: "Пройти ще раз", qNextQuiz: "Наступний квіз", qAll: "Усі квізи",
+    qNone: "У цій темі для рівня {l} немає карток.", qNewBest: "новий рекорд!", qPerfect: "Без жодної помилки!", qKPick: "обрати відповідь",
     freq: "Частотність (B1–C2)", fHi: "часто", fMid: "середньо", fLo: "рідко", sortFreq: "За частотою", sortAlpha: "А–Я",
     freqNote: "Наскільки часто сполучення звучить у живому мовленні: частота дієслова в субтитрах OpenSubtitles з поправкою на те, як часто воно вживається саме з цим прийменником. A1–A2 завжди повністю.",
     hideAnswers: "Сховати відповіді", retry: "Ще раз", noCards: "Для вибраних рівнів у цій темі карток немає.",
@@ -440,6 +474,11 @@ const I18N = {
   },
   en: {
     navCards: "Cards", navSheet: "Sheet", navVerbs: "Verbs",
+    navQuiz: "Quiz", quizTitle: "Quizzes by level", quizLead: "A sentence with a gap and four options: pick the right preposition. Quizzes go from the most common verbs of the level to the rare ones.",
+    qLevel: "Level", qSize: "Questions per quiz", quizN: "Quiz {n}", qCount: "{n} questions", randomQuiz: "Random quiz", qRandomSub: "Mixed questions from the whole level",
+    qBest: "best: {x}", qNotTaken: "not taken yet", qOf: "Question {i} of {n}", qRight: "Correct!", qWrong: "Not quite. The answer is {x}", qNext: "Next",
+    qPercent: "{p}% correct", qMist: "Mistakes", qYour: "your answer: {x}", qAgain: "Try again", qNextQuiz: "Next quiz", qAll: "All quizzes",
+    qNone: "No cards in this topic for level {l}.", qNewBest: "new best!", qPerfect: "Not a single mistake!", qKPick: "choose",
     freq: "Frequency (B1–C2)", fHi: "common", fMid: "medium", fLo: "rare", sortFreq: "By frequency", sortAlpha: "A–Z",
     freqNote: "How often the combination is heard in everyday speech: verb frequency in OpenSubtitles subtitles, adjusted for how often the verb is used with this particular preposition. A1–A2 are always included.",
     hideAnswers: "Hide answers", retry: "Try again", noCards: "No cards in this topic for the selected levels.",
@@ -481,6 +520,11 @@ const I18N = {
   },
   de: {
     navCards: "Karten", navSheet: "Blatt", navVerbs: "Verben",
+    navQuiz: "Quiz", quizTitle: "Quizze nach Niveau", quizLead: "Ein Satz mit Lücke und vier Antworten: Wähl die richtige Präposition. Die Quizze gehen von den häufigsten Verben des Niveaus zu den seltenen.",
+    qLevel: "Niveau", qSize: "Fragen pro Quiz", quizN: "Quiz {n}", qCount: "{n} Fragen", randomQuiz: "Zufallsquiz", qRandomSub: "Gemischte Fragen aus dem ganzen Niveau",
+    qBest: "Bestwert: {x}", qNotTaken: "noch nicht gemacht", qOf: "Frage {i} von {n}", qRight: "Richtig!", qWrong: "Leider falsch. Richtig ist: {x}", qNext: "Weiter",
+    qPercent: "{p} % richtig", qMist: "Fehler", qYour: "deine Antwort: {x}", qAgain: "Nochmal", qNextQuiz: "Nächstes Quiz", qAll: "Alle Quizze",
+    qNone: "In diesem Thema gibt es für {l} keine Karten.", qNewBest: "neuer Bestwert!", qPerfect: "Kein einziger Fehler!", qKPick: "auswählen",
     freq: "Häufigkeit (B1–C2)", fHi: "häufig", fMid: "mittel", fLo: "selten", sortFreq: "Nach Häufigkeit", sortAlpha: "A–Z",
     freqNote: "Wie oft die Verbindung im Alltag zu hören ist: Häufigkeit des Verbs in Untertiteln (OpenSubtitles), angepasst daran, wie oft es genau mit dieser Präposition vorkommt. A1–A2 sind immer komplett dabei.",
     hideAnswers: "Lösungen ausblenden", retry: "Nochmal", noCards: "Für die gewählten Niveaus gibt es in diesem Thema keine Karten.",
@@ -522,6 +566,11 @@ const I18N = {
   },
   ar: {
     navCards: "بطاقات", navSheet: "ورقة", navVerbs: "الأفعال",
+    navQuiz: "اختبار", quizTitle: "اختبارات حسب المستوى", quizLead: "جملة فيها فراغ وأربعة خيارات: اختر حرف الجر الصحيح. تبدأ الاختبارات بأكثر أفعال المستوى شيوعًا ثم الأندر.",
+    qLevel: "المستوى", qSize: "عدد الأسئلة في الاختبار", quizN: "اختبار {n}", qCount: "عدد الأسئلة: {n}", randomQuiz: "اختبار عشوائي", qRandomSub: "أسئلة متنوعة من المستوى كله",
+    qBest: "الأفضل: {x}", qNotTaken: "لم يُجرَ بعد", qOf: "السؤال {i} من {n}", qRight: "صحيح!", qWrong: "خطأ. الإجابة الصحيحة: {x}", qNext: "التالي",
+    qPercent: "{p}٪ إجابات صحيحة", qMist: "الأخطاء", qYour: "إجابتك: {x}", qAgain: "أعد المحاولة", qNextQuiz: "الاختبار التالي", qAll: "كل الاختبارات",
+    qNone: "لا توجد بطاقات في هذا الموضوع للمستوى {l}.", qNewBest: "رقم قياسي جديد!", qPerfect: "بلا أي خطأ!", qKPick: "اختيار",
     freq: "التكرار (B1–C2)", fHi: "شائع", fMid: "متوسط", fLo: "نادر", sortFreq: "حسب التكرار", sortAlpha: "A–Z",
     freqNote: "مدى تكرار التركيب في الكلام اليومي: تكرار الفعل في ترجمات OpenSubtitles مع مراعاة مدى استخدامه مع حرف الجر هذا تحديدًا. المستويان A1–A2 مشمولان دائمًا.",
     hideAnswers: "إخفاء الإجابات", retry: "مرة أخرى", noCards: "لا توجد بطاقات في هذا الموضوع للمستويات المختارة.",
@@ -564,7 +613,7 @@ const I18N = {
 };
 
 /* ---------- state ---------- */
-let S = { lang: "de", levels: ["A1", "A2"], topic: "p", mode: "s", len: 15, askCase: true, showTrans: true, autoNext: true, hints: true, freq: [3, 2, 1], sort: "freq" };
+let S = { lang: "de", levels: ["A1", "A2"], topic: "p", mode: "s", len: 15, askCase: true, showTrans: true, autoNext: true, hints: true, freq: [3, 2, 1], sort: "freq", qLevel: "A1", qSize: 10 };
 let P = {};            // progress: key -> [box, due, reviews, wrong, lastTs]
 let view = "cards";    // cards | sheet | verbs
 let sub = "home";      // inside cards: home | card | done
@@ -610,6 +659,8 @@ function loadLocal() {
   S.freq = (Array.isArray(S.freq) ? S.freq : []).filter(f => [1, 2, 3].includes(f));
   if (!S.freq.length) S.freq = [3, 2, 1];
   if (!["freq", "alpha"].includes(S.sort)) S.sort = "freq";
+  if (!LEVELS.includes(S.qLevel)) S.qLevel = "A1";
+  if (![5, 10, 15, 20].includes(S.qSize)) S.qSize = 10;
   if (!LANGS.includes(S.lang)) S.lang = "de";
 }
 function saveSettings() { try { localStorage.setItem(LS_SETTINGS, JSON.stringify(S)); } catch (e) {} }
@@ -649,9 +700,11 @@ async function initRemote() {
     settled = true; clearTimeout(timer);
     const body = snap.exists ? snap.data() : null;
     const { changed, localNewer } = mergeRemote(body && body.c);
-    if (changed) { saveLocalProgress(); if ((view === "cards" && sub === "home") || view === "verbs") render(); }
+    const qm = mergeQuiz(body && body.q);
+    if (changed) saveLocalProgress();
+    if ((changed || qm.changed) && ((view === "cards" && sub === "home") || view === "verbs" || (view === "quiz" && !QZ))) render();
     setSync("remote");
-    if (!snap.exists ? Object.keys(P).length > 0 : localNewer) scheduleRemote(0);
+    if (!snap.exists ? Object.keys(P).length + Object.keys(QB).length > 0 : localNewer || qm.localNewer) scheduleRemote(0);
   } catch (e) {
     settled = true; clearTimeout(timer);
     if (e && ["not_granted", "revoked", "capability_disabled", "capability_removed"].includes(e.code)) { remote.disabled = true; setSync("local"); }
@@ -670,7 +723,7 @@ async function flushRemote() {
   remote.writing = true; remote.dirty = false;
   setSync("saving");
   try {
-    await remote.ref.set({ v: 1, c: P });
+    await remote.ref.set({ v: 1, c: P, q: QB });
     remote.retried = false;
     setSync("remote");
   } catch (e) {
@@ -839,7 +892,7 @@ function clearAuto() { if (autoTimer) { clearTimeout(autoTimer); autoTimer = nul
 /* ---------- routing ---------- */
 function routeFromHash() {
   const h = (location.hash || "").replace("#", "");
-  const v = ["cards", "sheet", "verbs"].includes(h) ? h : "cards";
+  const v = ["cards", "sheet", "quiz", "verbs"].includes(h) ? h : "cards";
   if (v !== view) { clearAuto(); view = v; }
   render();
 }
@@ -851,7 +904,7 @@ function render() {
   document.documentElement.dir = rtl ? "rtl" : "ltr";
   document.getElementById("lang").value = S.lang;
   document.querySelectorAll("#tabs a").forEach(a => {
-    a.textContent = t({ cards: "navCards", sheet: "navSheet", verbs: "navVerbs" }[a.dataset.v]);
+    a.textContent = t({ cards: "navCards", sheet: "navSheet", quiz: "navQuiz", verbs: "navVerbs" }[a.dataset.v]);
     if (a.dataset.v === view) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
   });
   setSync(syncState);
@@ -860,6 +913,7 @@ function render() {
     else if (sub === "done" && R) renderDone();
     else { sub = "home"; renderHome(); }
   } else if (view === "sheet") renderSheet();
+  else if (view === "quiz") renderQuiz();
   else renderVerbs();
 }
 
@@ -1257,6 +1311,216 @@ function focusNextRow(from) {
   }
 }
 
+/* ---------- quiz ---------- */
+const LS_QUIZ = "praep-trainer-quiz-v1";
+let QB = {};    // best results: "mode|level|size|index" -> [best, questions, ts]
+let QZ = null;  // running quiz
+const QSIZES = [5, 10, 15, 20];
+const PLAIN = ["an", "auf", "aus", "bei", "durch", "für", "gegen", "in", "mit", "nach", "über", "um", "unter", "von", "vor", "zu"];
+const DEM = ["am", "beim", "im", "vom", "zum"], DAS = ["ans", "aufs", "ins", "ums", "fürs", "übers"];
+const BASE = { am: "an", beim: "bei", im: "in", vom: "von", zum: "zu", zur: "zu", ans: "an", aufs: "auf", ins: "in", ums: "um", "fürs": "für", "übers": "über", durchs: "durch", vorm: "vor" };
+const EIN = ["miteinander", "voneinander", "aufeinander", "aneinander", "ineinander", "umeinander", "füreinander", "zueinander", "gegeneinander",
+  "übereinander", "untereinander", "nacheinander", "nebeneinander", "hintereinander", "durcheinander", "auseinander", "beieinander", "voreinander"];
+const vcore = b => b.toLowerCase().replace(/\([^)]*\)/g, " ").split(/\s+/)
+  .filter(w => w && !["sich", "jemanden", "jemandem", "etwas", "nichts", "es"].includes(w) && !w.includes("/")).pop() || b;
+const VP = new Map();
+for (const c of CARDS) { const k = vcore(c.b); if (!VP.has(k)) VP.set(k, new Set()); VP.get(k).add(c.p); }
+const daForm = (p, pre) => (/^[aeiouäöü]/.test(p) ? pre + "r" : pre) + p;
+const qMode = () => (S.topic === "da" ? "pa" : S.topic === "ei" ? "ei" : "s");
+
+function loadQuiz() { try { const q = JSON.parse(localStorage.getItem(LS_QUIZ) || "null"); if (q && typeof q === "object") QB = q; } catch (e) {} }
+function saveQuiz() { try { localStorage.setItem(LS_QUIZ, JSON.stringify(QB)); } catch (e) {} scheduleRemote(); }
+function mergeQuiz(rq) {
+  let changed = false, localNewer = false;
+  for (const [k, e] of Object.entries(rq || {})) if (Array.isArray(e) && (!QB[k] || e[0] > QB[k][0])) { QB[k] = e; changed = true; }
+  for (const [k, e] of Object.entries(QB)) if (!rq || !rq[k] || rq[k][0] < e[0]) localNewer = true;
+  if (changed) { try { localStorage.setItem(LS_QUIZ, JSON.stringify(QB)); } catch (e) {} }
+  return { changed, localNewer };
+}
+
+// Three wrong options of the same kind as the answer (plain preposition, contraction, da-/wo-word, -einander).
+// One of them is preferably another preposition the same verb takes, or the uncontracted base (zu for zum).
+function makeOptions(c, mode) {
+  const ans = expectedOf(c, mode)[0], x = ans.toLowerCase();
+  const cap = ans[0] !== ans[0].toLowerCase();
+  const siblings = [...(VP.get(vcore(c.b)) || [])].filter(p => p !== c.p);
+  let pool, prefer = [];
+  if (x.endsWith("einander")) pool = EIN;
+  else if (/^(da|wo)/.test(x) && x !== c.p) {
+    const pre = x.startsWith("wo") ? "wo" : "da";
+    pool = PLAIN.map(p => daForm(p, pre)); prefer = siblings.filter(p => PLAIN.includes(p)).map(p => daForm(p, pre));
+  } else if (BASE[x]) { pool = x === "zur" ? ["zum", "bei", "von", "nach"] : DEM.includes(x) ? DEM : DAS; prefer = [BASE[x]]; }
+  else { pool = PLAIN; prefer = siblings; }
+  const bad = new Set([x, ...(c.alt || []).map(a => a.toLowerCase())]);
+  const out = [];
+  for (const o of shuffle(prefer.slice())) if (!bad.has(o) && out.length < 1) out.push(o);
+  for (const o of shuffle(pool.slice())) if (!bad.has(o) && !out.includes(o) && out.length < 3) out.push(o);
+  return shuffle([x, ...out]).map(o => (cap ? o[0].toUpperCase() + o.slice(1) : o));
+}
+
+function quizChunks(level) {
+  const list = setFor(qMode()).filter(c => c.l === level).sort(byFreq);
+  const chunks = [];
+  for (let i = 0; i < list.length; i += S.qSize) chunks.push(list.slice(i, i + S.qSize));
+  // a tiny tail (1–2 questions) joins the previous quiz
+  if (chunks.length > 1 && chunks[chunks.length - 1].length < 3) chunks[chunks.length - 2].push(...chunks.pop());
+  return { list, chunks };
+}
+const quizKey = i => qMode() + "|" + S.qLevel + "|" + S.qSize + "|" + i;
+
+function renderQuiz() {
+  if (QZ && QZ.done) renderQuizDone();
+  else if (QZ) renderQuizRun();
+  else renderQuizHome();
+}
+
+function renderQuizHome() {
+  clearAuto();
+  const m = qMode();
+  const counts = Object.fromEntries(LEVELS.map(l => [l, setFor(m).filter(c => c.l === l).length]));
+  if (!counts[S.qLevel]) S.qLevel = LEVELS.find(l => counts[l]) || "A1";
+  const { list, chunks } = quizChunks(S.qLevel);
+  const tiles = chunks.map((ch, i) => {
+    const b = QB[quizKey(i)];
+    const bands = ch.filter(c => c.f).map(c => c.f);
+    const major = bands.length ? [3, 2, 1].reduce((a, f) => (bands.filter(x => x === f).length > bands.filter(x => x === a).length ? f : a), 3) : 0;
+    return '<button type="button" class="qtile" data-quiz="' + i + '"><b>' + esc(t("quizN", { n: i + 1 })) + "</b>" +
+      '<span class="sub">' + freqBars(major) + "<span>" + esc(t("qCount", { n: ch.length })) + "</span></span>" +
+      '<span class="best' + (b ? (b[0] === b[1] ? " full" : " part") : "") + '">' + esc(b ? t("qBest", { x: b[0] + " / " + b[1] }) : t("qNotTaken")) + "</span></button>";
+  }).join("");
+  app.innerHTML =
+    '<h1 class="title">' + esc(t("quizTitle")) + '</h1><p class="lead">' + esc(t("quizLead")) + "</p>" +
+    '<section class="panel qsetup">' +
+    '<div class="opt"><p class="label">' + esc(t("topic")) + "</p>" + topicSeg() + "</div>" +
+    '<div class="row2"><div class="opt"><p class="label">' + esc(t("qLevel")) + '</p><div class="seg" role="group">' +
+    LEVELS.map(l => '<button type="button" data-qlvl="' + l + '" aria-pressed="' + (S.qLevel === l) + '"' + (counts[l] ? "" : " disabled") + ">" + l + "</button>").join("") + "</div></div>" +
+    '<div class="opt"><p class="label">' + esc(t("qSize")) + '</p><div class="seg" role="group">' +
+    QSIZES.map(n => '<button type="button" data-qsize="' + n + '" aria-pressed="' + (S.qSize === n) + '">' + n + "</button>").join("") + "</div></div></div>" +
+    "</section>" +
+    (list.length
+      ? '<div class="qgrid">' + tiles + '<button type="button" class="qtile rnd" data-quiz="rnd"><b>' + esc(t("randomQuiz")) + '</b><span class="sub"><span>' +
+        esc(t("qRandomSub")) + '</span></span><span class="best">' + esc(t("qCount", { n: Math.min(S.qSize, list.length) })) + "</span></button></div>"
+      : '<p class="sempty">' + esc(t("qNone", { l: S.qLevel })) + "</p>");
+  app.querySelectorAll("[data-topic]").forEach(b => b.addEventListener("click", () => { S.topic = b.dataset.topic; saveSettings(); render(); }));
+  app.querySelectorAll("[data-qlvl]").forEach(b => b.addEventListener("click", () => { S.qLevel = b.dataset.qlvl; saveSettings(); render(); }));
+  app.querySelectorAll("[data-qsize]").forEach(b => b.addEventListener("click", () => { S.qSize = +b.dataset.qsize; saveSettings(); render(); }));
+  app.querySelectorAll("[data-quiz]").forEach(b => b.addEventListener("click", () => startQuiz(b.dataset.quiz)));
+}
+
+function startQuiz(which) {
+  const { list, chunks } = quizChunks(S.qLevel);
+  const rnd = which === "rnd";
+  const idx = rnd ? -1 : +which;
+  const cards = rnd ? shuffle(list.slice()).slice(0, S.qSize) : shuffle((chunks[idx] || []).slice());
+  if (!cards.length) return;
+  QZ = { idx, key: rnd ? null : quizKey(idx), mode: qMode(), level: S.qLevel, cards, i: 0, score: 0, wrong: [], picked: null, opts: null, done: false };
+  render(); window.scrollTo(0, 0);
+}
+
+function quizSentence(c, mode, filled) {
+  let html = "";
+  for (const s of c.ex) {
+    const k = s[0], txt = s.slice(1);
+    if (k === "0") html += esc(txt);
+    else if (k === "1") html += "<mark>" + esc(txt) + "</mark>";
+    else html += filled ? '<span class="qgap done">' + esc(txt) + "</span>" : '<span class="qgap" aria-label="' + esc(t("gap", { n: 1 })) + '">&nbsp;</span>';
+  }
+  return html;
+}
+
+function renderQuizRun() {
+  clearAuto();
+  const c = QZ.cards[QZ.i];
+  if (!QZ.opts) QZ.opts = makeOptions(c, QZ.mode);
+  const ans = expectedOf(c, QZ.mode)[0];
+  const answered = QZ.picked != null;
+  const ok = answered && QZ.opts[QZ.picked].toLowerCase() === ans.toLowerCase();
+  const n = QZ.cards.length;
+  app.innerHTML =
+    '<div class="session">' +
+    '<div class="sbar"><div class="track" role="progressbar" aria-valuemin="0" aria-valuemax="' + n + '" aria-valuenow="' + QZ.i + '"><i style="width:' + Math.round(100 * (QZ.i + (answered ? 1 : 0)) / n) + '%"></i></div>' +
+    '<span class="count">' + esc(t("qOf", { i: QZ.i + 1, n })) + '</span><button type="button" class="btn ghost" id="qquit">' + esc(t("quit")) + "</button></div>" +
+    '<section class="qcard">' +
+    '<div class="qmeta"><span class="pill">' + QZ.level + (QZ.key ? " · " + esc(t("quizN", { n: QZ.idx + 1 })) : "") + "</span>" + freqBars(c.f) +
+    (answered ? '<span class="qtrans-inline de" dir="ltr" lang="de">' + verbLabel(c, QZ.mode, true) + '</span><span class="qtrans-inline" dir="auto">' + esc(trOf(c)) + "</span>" : "") + "</div>" +
+    '<div class="qtext de" dir="ltr" lang="de"><p>' + quizSentence(c, QZ.mode, answered) + "</p></div>" +
+    '<div class="qopts de" dir="ltr" lang="de">' + QZ.opts.map((o, k) => {
+      const st = !answered ? "" : o.toLowerCase() === ans.toLowerCase() ? " ok" : k === QZ.picked ? " bad" : "";
+      return '<button type="button" class="qopt' + st + '" data-opt="' + k + '"' + (answered ? " disabled" : "") + ">" + kbd(String(k + 1)) + "<span>" + esc(o) + "</span></button>";
+    }).join("") + "</div>" +
+    (answered
+      ? '<div class="qres ' + (ok ? "ok" : "bad") + '" aria-live="polite"><div class="verdict"><strong>' + esc(ok ? t("qRight") : t("qWrong", { x: ans })) + "</strong></div>" +
+        '<div class="acts"><button type="button" class="btn primary" id="qnext">' + esc(t("qNext")) + " " + kbd("Enter") + "</button></div>" +
+        (ok && S.autoNext ? '<div class="auto" style="--t:' + AUTO_MS + 'ms"><i></i></div>' : "") + "</div>"
+      : '<div class="qfoot qkeys"><div class="keys"><span>' + kbd("1") + kbd("4") + esc(t("qKPick")) + "</span></div></div>") +
+    "</section></div>";
+  document.getElementById("qquit").addEventListener("click", () => { clearAuto(); QZ = null; render(); });
+  app.querySelectorAll("[data-opt]").forEach(b => b.addEventListener("click", () => pickOpt(+b.dataset.opt)));
+  const nx = document.getElementById("qnext");
+  if (nx) {
+    nx.addEventListener("click", nextQuestion);
+    nx.focus({ preventScroll: true });
+    if (ok && S.autoNext) autoTimer = setTimeout(() => { autoTimer = null; if (view === "quiz" && QZ && QZ.picked != null) nextQuestion(); }, AUTO_MS);
+  }
+}
+
+function pickOpt(k) {
+  if (!QZ || QZ.done || QZ.picked != null || !QZ.opts[k]) return;
+  const c = QZ.cards[QZ.i], ans = expectedOf(c, QZ.mode)[0];
+  QZ.picked = k;
+  if (QZ.opts[k].toLowerCase() === ans.toLowerCase()) QZ.score++;
+  else QZ.wrong.push({ c, pick: QZ.opts[k] });
+  renderQuizRun();
+}
+
+function nextQuestion() {
+  clearAuto();
+  if (!QZ || QZ.picked == null) return;
+  QZ.i++; QZ.picked = null; QZ.opts = null;
+  if (QZ.i >= QZ.cards.length) {
+    QZ.done = true;
+    if (QZ.key) {
+      const prev = QB[QZ.key];
+      QZ.newBest = !prev || QZ.score > prev[0];
+      if (QZ.newBest) { QB[QZ.key] = [QZ.score, QZ.cards.length, Date.now()]; saveQuiz(); }
+    }
+  }
+  render();
+}
+
+function renderQuizDone() {
+  clearAuto();
+  const n = QZ.cards.length, pct = Math.round(100 * QZ.score / n);
+  const hasNext = QZ.key && QZ.idx + 1 < quizChunks(QZ.level).chunks.length && qMode() === QZ.mode;
+  app.innerHTML =
+    '<section class="summary"><div class="panel" style="display:grid;gap:18px">' +
+    '<div><p class="label">' + esc(QZ.level + " · " + (QZ.key ? t("quizN", { n: QZ.idx + 1 }) : t("randomQuiz"))) + '</p><div class="score">' + QZ.score + " / " + n + "</div>" +
+    '<div style="color:var(--muted)">' + esc(t("qPercent", { p: pct })) + (QZ.newBest && QZ.key ? " · " + esc(t("qNewBest")) : "") + "</div></div>" +
+    (QZ.wrong.length
+      ? '<div><p class="label">' + esc(t("qMist")) + '</p><ul class="mlist">' + QZ.wrong.map(w =>
+          '<li><span class="v de" dir="ltr" lang="de">' + quizSentence(w.c, QZ.mode, true) + '</span><span class="t" dir="auto">' + esc(t("qYour", { x: w.pick })) + "</span></li>").join("") + "</ul></div>"
+      : "<p>" + esc(t("qPerfect")) + "</p>") +
+    '<div class="acts">' +
+    (hasNext ? '<button type="button" class="btn primary big" id="qnextquiz">' + esc(t("qNextQuiz")) + " " + kbd("Enter") + "</button>" : "") +
+    '<button type="button" class="btn' + (hasNext ? "" : " primary") + ' big" id="qagain">' + esc(t("qAgain")) + (hasNext ? "" : " " + kbd("Enter")) + "</button>" +
+    '<button type="button" class="btn ghost big" id="qall">' + esc(t("qAll")) + "</button></div>" +
+    "</div></section>";
+  const again = () => { const i = QZ.idx; QZ = null; startQuiz(i < 0 ? "rnd" : String(i)); };
+  document.getElementById("qagain").addEventListener("click", again);
+  document.getElementById("qall").addEventListener("click", () => { QZ = null; render(); });
+  const nq = document.getElementById("qnextquiz");
+  if (nq) nq.addEventListener("click", () => { const i = QZ.idx + 1; QZ = null; startQuiz(String(i)); });
+  (nq || document.getElementById("qagain")).focus({ preventScroll: true });
+}
+
+document.addEventListener("keydown", ev => {
+  if (view !== "quiz" || !QZ || ev.isComposing || ev.ctrlKey || ev.metaKey || ev.altKey) return;
+  const tag = (ev.target && ev.target.tagName) || "";
+  if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") return;
+  if (!QZ.done && QZ.picked == null && /^[1-4]$/.test(ev.key)) { ev.preventDefault(); pickOpt(+ev.key - 1); }
+  else if (ev.key === "Enter" && !QZ.done && QZ.picked != null) { ev.preventDefault(); nextQuestion(); }
+});
+
 /* ---------- verbs ---------- */
 function renderVerbs() {
   const q = norm(listQuery);
@@ -1310,8 +1574,9 @@ document.getElementById("lang").addEventListener("change", ev => {
 });
 
 loadLocal();
+loadQuiz();
 if (!S.levels.length) S.levels = ["A1", "A2"];
-view = ["cards", "sheet", "verbs"].includes((location.hash || "").slice(1)) ? location.hash.slice(1) : "cards";
+view = ["cards", "sheet", "quiz", "verbs"].includes((location.hash || "").slice(1)) ? location.hash.slice(1) : "cards";
 render();
 initRemote();
 })();
